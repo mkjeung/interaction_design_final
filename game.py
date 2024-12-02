@@ -20,7 +20,14 @@ click_sound = pygame.mixer.Sound("Click - Sound Effect (HD).wav")
 logo_img = pygame.image.load("logo.png")
 logo_img = pygame.transform.scale(logo_img, (500, 500))
 
+diff_img = pygame.image.load("select_diff_title.png")
+diff_img = pygame.transform.scale(diff_img, (750, 320))
+
 bg_img = pygame.image.load("bg.png")
+bg_img = pygame.transform.scale(bg_img, (WIDTH, HEIGHT))
+
+bg_img_2 = pygame.image.load("bg_2.png")
+bg_img_2 = pygame.transform.scale(bg_img_2, (WIDTH, HEIGHT))
 
 # Colors
 WHITE = (255, 255, 255)
@@ -127,12 +134,12 @@ class Button:
 
 # Initialize Buttons
 def initialize_buttons():
-    global start_button, restart_button, leaderboard_button, rules_button, back_button, easy_button, medium_button, hard_button
+    global start_button, restart_button, leaderboard_button, rules_button, back_button, easy_button, medium_button, hard_button, home_button
     BTN_WIDTH = 160
     BTN_HEIGHT = 60
 
-    DIFF_WIDTH = 200
-    DIFF_HEIGHT = 75
+    DIFF_WIDTH = 290
+    DIFF_HEIGHT = 150
 
     #alignment variables for menu screen
     spacing = 20
@@ -142,7 +149,7 @@ def initialize_buttons():
 
     #alignment variables for difficulty
     total_width_diff = (DIFF_WIDTH * 3) + (spacing * 2)
-    start_x_diff = (WIDTH - total_width_diff) // 2
+    start_x_diff = ((WIDTH - total_width_diff) // 2) - 10
 
     start_button = Button(
         x=start_x + BTN_WIDTH + spacing,
@@ -197,28 +204,31 @@ def initialize_buttons():
         width=DIFF_WIDTH,
         height=DIFF_HEIGHT
     )
-    '''restart_button = Button(
-        x=(WIDTH - button_width) // 2,
+    restart_button = Button(
+        x=(WIDTH + spacing) // 2,
         y=HEIGHT - 100,  # Initial Y-coordinate; will adjust dynamically
-        width=button_width,
-        height=button_height,
-        color=GRAY,
-        hover_color=DARK_GRAY,
-        text="Restart",
-        text_color=BLACK,
-        font=small_font
+        unselected_img="buttons/restart_button.png",
+        selected_img="buttons/restart_button_selected.png",
+        width=BTN_WIDTH,
+        height=BTN_HEIGHT
     )
+    home_button = Button(
+        x=(WIDTH - spacing - BTN_WIDTH*2) // 2,
+        y=HEIGHT - 100,
+        unselected_img="buttons/home_button.png",
+        selected_img="buttons/home_button_selected.png",
+        width=BTN_WIDTH,
+        height=BTN_HEIGHT
+    )
+    
     back_button = Button(
-        x=WIDTH - button_width - 50,
-        y=HEIGHT - button_height - 50,
-        width=button_width,
-        height=button_height,
-        color=GRAY,
-        hover_color=DARK_GRAY,
-        text="Back",
-        text_color=BLACK,
-        font=small_font
-        )'''
+        x=(WIDTH - BTN_WIDTH) // 2,
+        y=HEIGHT - 100,
+        unselected_img="buttons/back_button.png",
+        selected_img="buttons/back_button_selected.png",
+        width=BTN_WIDTH,
+        height=BTN_HEIGHT
+    )
 
 
 # Function to draw text centered
@@ -276,7 +286,8 @@ def draw_game_over_screen():
 
 # Function to draw the initial start screen
 def draw_start_screen():
-    screen.fill(WHITE)
+    screen.blit(bg_img, (0, 0))
+
     logo_rect = logo_img.get_rect(center=(WIDTH // 2, HEIGHT // 3))
     screen.blit(logo_img, logo_rect)
 
@@ -286,7 +297,10 @@ def draw_start_screen():
     pygame.display.flip()
 
 def draw_difficulty_screen():
-    screen.fill(WHITE)
+    screen.blit(bg_img_2, (0, 0))
+
+    title_rect = diff_img.get_rect(center=(WIDTH // 2, HEIGHT // 4))
+    screen.blit(diff_img, title_rect)
 
     easy_button.draw(screen)
     medium_button.draw(screen)
@@ -300,10 +314,26 @@ def draw_leaderboard_screen():
     for i, entry in enumerate(leaderboard):
         entry_text = f"{i + 1}. {entry['name']} - {entry['score']}"
         draw_text_custom(entry_text, BLACK, WIDTH // 2, HEIGHT // 2 - 100 + i * 40, small_font)
-    # Draw Back button
-    back_button.draw(screen)
+    # Draw restart button and home button
+    restart_button.draw(screen)
+    home_button.draw(screen)
     pygame.display.flip()
 
+def return_to_home():
+    global current_state, score, game_active, round_active, start_time, current_direction
+    global success_message_time, round_delay_time, game_over, name_input_active, player_name
+    # Reset everything and go back to start screen
+    score = 0
+    game_active = False
+    round_active = False
+    start_time = 0
+    current_direction = ""
+    success_message_time = 0
+    round_delay_time = 0
+    game_over = False
+    name_input_active = False
+    player_name = ""
+    current_state = START_SCREEN
 
 # Function to draw the rules screen
 def draw_rules_screen():
@@ -431,10 +461,10 @@ while running:
             handle_name_input(event)
 
         elif current_state == LEADERBOARD_DISPLAY:
-            if back_button.is_clicked(event):
-                current_state = START_SCREEN
             if restart_button.is_clicked(event):
                 reset_game()
+            elif home_button.is_clicked(event):
+                return_to_home()
 
         elif current_state == RULES_SCREEN:
             if back_button.is_clicked(event):
