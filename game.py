@@ -116,7 +116,7 @@ class Button:
 
 # Initialize Buttons
 def initialize_buttons():
-    global start_button, restart_button, leaderboard_button, rules_button, back_button
+    global start_button, restart_button, leaderboard_button, rules_button, back_button, easy_button, medium_button, hard_button
     button_width, button_height = 200, 50
     start_button = Button(
         x=(WIDTH - button_width) // 2,
@@ -153,12 +153,12 @@ def initialize_buttons():
     )
 
     easy_button = Button(
-        x=(WIDTH - button_width) // 2 - 250,
+        x=(WIDTH - button_width) // 2 - 210,
         y=(HEIGHT) // 2 + 110,
         width=button_width,
         height=button_height,
-        color=GRAY,
-        hover_color=DARK_GRAY,
+        color=GREEN,
+        hover_color= pygame.Color(144, 238, 144),
         text="Easy",
         text_color=BLACK,
         font=small_font
@@ -169,20 +169,20 @@ def initialize_buttons():
         y=(HEIGHT) // 2 + 110,
         width=button_width,
         height=button_height,
-        color=GRAY,
-        hover_color=DARK_GRAY,
+        color=pygame.Color(255,255,0),
+        hover_color=pygame.Color(255,255,224),
         text="Medium",
         text_color=BLACK,
         font=small_font
     )
 
     hard_button = Button(
-        x=(WIDTH - button_width) // 2 + 250,
+        x=(WIDTH - button_width) // 2 + 210,
         y=(HEIGHT) // 2 + 110,
         width=button_width,
         height=button_height,
-        color=GRAY,
-        hover_color=DARK_GRAY,
+        color=RED,
+        hover_color=pygame.Color(250,128,114),
         text="Hard",
         text_color=BLACK,
         font=small_font
@@ -271,6 +271,9 @@ def draw_start_screen():
     start_button.draw(screen)
     leaderboard_button.draw(screen)
     rules_button.draw(screen)
+    easy_button.draw(screen)
+    medium_button.draw(screen)
+    hard_button.draw(screen)
     pygame.display.flip()
 
 # Function to draw the leaderboard on game-over screen or Leaderboard Screen
