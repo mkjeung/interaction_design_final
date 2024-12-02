@@ -270,6 +270,23 @@ def draw_game_over_screen():
 def draw_start_screen():
     screen.fill(WHITE)
     draw_text_custom("Makey Makey Game", BLACK, WIDTH // 2, HEIGHT // 2 - 200, font)
+
+    #alignment variables for horizontal alignment
+    spacing = 10
+    button_width = start_button.rect.width + leaderboard_button.rect.width + rules_button.rect.width + 2 * spacing
+    start_x = (WIDTH - button_width) // 2
+
+    #horizontal placement
+    leaderboard_button.rect.x = start_x
+    start_button.rect.x = start_x + leaderboard_button.rect.width + spacing
+    rules_button.rect.x = start_button.rect.x + start_button.rect.width + spacing
+
+    #alignment for vertical centering
+    vertical_center = HEIGHT // 2
+    start_button.rect.y = vertical_center
+    leaderboard_button.rect.y = vertical_center
+    rules_button.rect.y = vertical_center
+
     start_button.draw(screen)
     leaderboard_button.draw(screen)
     rules_button.draw(screen)
