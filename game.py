@@ -46,10 +46,12 @@ round_delay_time = 0
 game_over = False
 name_input_active = False
 player_name = ""
+difficulty = 'medium'
 LEADERBOARD_FILE = 'leaderboard.json'
 
 # Define Game States
 START_SCREEN = "start_screen"
+DIFFICULTY_SCREEN = 'difficulty_screen'
 COUNTDOWN = "countdown"         # New Game State for Countdown
 PLAYING = "playing"
 GAME_OVER = "game_over"
@@ -154,7 +156,7 @@ def initialize_buttons():
 
     easy_button = Button(
         x=(WIDTH - button_width) // 2 - 210,
-        y=(HEIGHT) // 2 + 110,
+        y=(HEIGHT) // 2,
         width=button_width,
         height=button_height,
         color=GREEN,
@@ -166,7 +168,7 @@ def initialize_buttons():
 
     medium_button = Button(
         x=(WIDTH - button_width) // 2,
-        y=(HEIGHT) // 2 + 110,
+        y=(HEIGHT) // 2,
         width=button_width,
         height=button_height,
         color=pygame.Color(255,255,0),
@@ -178,7 +180,7 @@ def initialize_buttons():
 
     hard_button = Button(
         x=(WIDTH - button_width) // 2 + 210,
-        y=(HEIGHT) // 2 + 110,
+        y=(HEIGHT) // 2,
         width=button_width,
         height=button_height,
         color=RED,
@@ -271,6 +273,10 @@ def draw_start_screen():
     start_button.draw(screen)
     leaderboard_button.draw(screen)
     rules_button.draw(screen)
+    pygame.display.flip()
+
+def draw_difficulty_screen():
+    screen.fill(WHITE)
     easy_button.draw(screen)
     medium_button.draw(screen)
     hard_button.draw(screen)
@@ -286,6 +292,7 @@ def draw_leaderboard_screen():
     # Draw Back button
     back_button.draw(screen)
     pygame.display.flip()
+
 
 # Function to draw the rules screen
 def draw_rules_screen():
@@ -351,12 +358,24 @@ while running:
         if current_state == START_SCREEN:
             if start_button.is_clicked(event):
                 # Transition to COUNTDOWN state
-                current_state = COUNTDOWN
-                countdown_start_ticks = pygame.time.get_ticks()  # Record the start time
+                current_state = DIFFICULTY_SCREEN
             if leaderboard_button.is_clicked(event):
                 current_state = LEADERBOARD_DISPLAY
             if rules_button.is_clicked(event):
                 current_state = RULES_SCREEN
+        if current_state == DIFFICULTY_SCREEN:
+            if easy_button.is_clicked(event):
+                countdown_duration = 10
+                current_state = COUNTDOWN
+                countdown_start_ticks = pygame.time.get_ticks()  # Record the start time
+            if medium_button.is_clicked(event):
+                countdown_duration = 5
+                current_state = COUNTDOWN
+                countdown_start_ticks = pygame.time.get_ticks()  # Record the start time
+            if hard_button.is_clicked(event):
+                countdown_duration = 3
+                current_state = COUNTDOWN
+                countdown_start_ticks = pygame.time.get_ticks()  # Record the start time
 
         elif current_state == PLAYING:
             if event.type == pygame.KEYDOWN and round_active:
@@ -417,10 +436,13 @@ while running:
     if current_state == START_SCREEN:
         draw_start_screen()
 
+    if current_state == DIFFICULTY_SCREEN:
+        draw_difficulty_screen()
+
     elif current_state == COUNTDOWN:
         # Calculate elapsed time in seconds
         seconds_elapsed = (pygame.time.get_ticks() - countdown_start_ticks) // 1000
-        seconds_left = countdown_duration - seconds_elapsed
+        seconds_left = 5 - seconds_elapsed
 
         if seconds_left > 0:
             screen.fill(WHITE)
@@ -452,7 +474,7 @@ while running:
 
         # Calculate remaining time
         elapsed_time = time.time() - start_time
-        remaining_time = max(0, 5 - int(elapsed_time))  # Countdown from 5 seconds
+        remaining_time = max(0, countdown_duration - int(elapsed_time))  # Countdown from 5 seconds
 
         if round_active and remaining_time == 0:  # Timeout ends the game
             clock_sound.stop()
