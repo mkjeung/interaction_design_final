@@ -8,7 +8,7 @@ import os
 pygame.init()
 
 # Screen dimensions
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 1000, 800
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Makey Makey Game")
 exp_sound = pygame.mixer.Sound("Minecraft XP Sound.mp3")
@@ -16,6 +16,11 @@ clock_sound = pygame.mixer.Sound("Fast Ticking clock sound effect.mp3")
 fail_sound = pygame.mixer.Sound("Buzzer sound effect.wav")
 click_sound = pygame.mixer.Sound("Click - Sound Effect (HD).wav")
 
+#Loading images
+logo_img = pygame.image.load("logo.png")
+logo_img = pygame.transform.scale(logo_img, (500, 500))
+
+bg_img = pygame.image.load("bg.png")
 
 # Colors
 WHITE = (255, 255, 255)
@@ -89,25 +94,29 @@ def save_leaderboard():
 
 # Define Button Class
 class Button:
-    def __init__(self, x, y, width, height, color, hover_color, text, text_color, font):
-        self.rect = pygame.Rect(x, y, width, height)
-        self.color = color
-        self.hover_color = hover_color
-        self.text = text
-        self.text_color = text_color
-        self.font = font
+    def __init__(self, x, y, unselected_img, selected_img, width=200, height=50, selected_bool=False):
+        original_unselected = pygame.image.load(unselected_img)
+        original_selected = pygame.image.load(selected_img)
+
+        self.unselected_img = pygame.transform.scale(original_unselected, (width, height))
+        self.selected_img = pygame.transform.scale(original_selected, (width, height))
+        
+        #makes a rect from the image
+        self.rect = self.unselected_img.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        
+        self.is_selected = selected_bool
+        self.was_clicked = False
 
     def draw(self, surface):
         mouse_pos = pygame.mouse.get_pos()
-        if self.rect.collidepoint(mouse_pos):
-            pygame.draw.rect(surface, self.hover_color, self.rect)
+        if self.is_selected:
+            surface.blit(self.selected_img, self.rect)
+        elif self.rect.collidepoint(mouse_pos):
+            surface.blit(self.selected_img, self.rect)
         else:
-            pygame.draw.rect(surface, self.color, self.rect)
-        
-        # Render text
-        text_surf = self.font.render(self.text, True, self.text_color)
-        text_rect = text_surf.get_rect(center=self.rect.center)
-        surface.blit(text_surf, text_rect)
+            surface.blit(self.unselected_img, self.rect)
 
     def is_clicked(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -119,77 +128,76 @@ class Button:
 # Initialize Buttons
 def initialize_buttons():
     global start_button, restart_button, leaderboard_button, rules_button, back_button, easy_button, medium_button, hard_button
-    button_width, button_height = 200, 50
+    BTN_WIDTH = 160
+    BTN_HEIGHT = 60
+
+    DIFF_WIDTH = 200
+    DIFF_HEIGHT = 75
+
+    #alignment variables for menu screen
+    spacing = 20
+    total_width = (BTN_WIDTH * 3) + (spacing * 2)
+    start_x = (WIDTH - total_width) // 2
+    menu_y = HEIGHT // 2
+
+    #alignment variables for difficulty
+    total_width_diff = (DIFF_WIDTH * 3) + (spacing * 2)
+    start_x_diff = (WIDTH - total_width_diff) // 2
+
     start_button = Button(
-        x=(WIDTH - button_width) // 2,
-        y=(HEIGHT) // 2 - 100,
-        width=button_width,
-        height=button_height,
-        color=GRAY,
-        hover_color=DARK_GRAY,
-        text="Start",
-        text_color=BLACK,
-        font=small_font
+        x=start_x + BTN_WIDTH + spacing,
+        y=menu_y + 100,
+        unselected_img="buttons/start_button.png",
+        selected_img="buttons/start_button_selected.png",
+        width=BTN_WIDTH,
+        height=BTN_HEIGHT,
+        selected_bool=True
     )
     leaderboard_button = Button(
-        x=(WIDTH - button_width) // 2,
-        y=(HEIGHT) // 2 - 30,
-        width=button_width,
-        height=button_height,
-        color=GRAY,
-        hover_color=DARK_GRAY,
-        text="Leaderboard",
-        text_color=BLACK,
-        font=small_font
+        x=start_x,
+        y=menu_y + 100,
+        unselected_img="buttons/leaderboard_button.png",
+        selected_img="buttons/leaderboard_button_selected.png",
+        width=BTN_WIDTH,
+        height=BTN_HEIGHT
     )
+
     rules_button = Button(
-        x=(WIDTH - button_width) // 2,
-        y=(HEIGHT) // 2 + 40,
-        width=button_width,
-        height=button_height,
-        color=GRAY,
-        hover_color=DARK_GRAY,
-        text="Rules",
-        text_color=BLACK,
-        font=small_font
+        x=start_x + (BTN_WIDTH + spacing) * 2,
+        y=menu_y + 100,
+        unselected_img="buttons/rules_button.png",
+        selected_img="buttons/rules_button_selected.png",
+        width=BTN_WIDTH,
+        height=BTN_HEIGHT
     )
 
     easy_button = Button(
-        x=(WIDTH - button_width) // 2 - 210,
-        y=(HEIGHT) // 2,
-        width=button_width,
-        height=button_height,
-        color=GREEN,
-        hover_color= pygame.Color(144, 238, 144),
-        text="Easy",
-        text_color=BLACK,
-        font=small_font
+        x=start_x_diff,
+        y=menu_y,
+        unselected_img="buttons/easy_button.png",
+        selected_img="buttons/easy_button_selected.png",
+        width=DIFF_WIDTH,
+        height=DIFF_HEIGHT,
     )
 
     medium_button = Button(
-        x=(WIDTH - button_width) // 2,
-        y=(HEIGHT) // 2,
-        width=button_width,
-        height=button_height,
-        color=pygame.Color(255,255,0),
-        hover_color=pygame.Color(255,255,224),
-        text="Medium",
-        text_color=BLACK,
-        font=small_font
+        x=start_x_diff + DIFF_WIDTH + spacing*2,
+        y=menu_y,
+        unselected_img="buttons/medium_button.png",
+        selected_img="buttons/medium_button_selected.png",
+        width=DIFF_WIDTH,
+        height=DIFF_HEIGHT
     )
 
     hard_button = Button(
-        x=(WIDTH - button_width) // 2 + 210,
-        y=(HEIGHT) // 2,
-        width=button_width,
-        height=button_height,
-        color=RED,
-        hover_color=pygame.Color(250,128,114),
-        text="Hard",
-        text_color=BLACK,
-        font=small_font
+        x= start_x_diff + (DIFF_WIDTH + spacing*2) * 2,
+        y=menu_y,
+        unselected_img="buttons/hard_button.png",
+        selected_img="buttons/hard_button_selected.png",
+        width=DIFF_WIDTH,
+        height=DIFF_HEIGHT
     )
-    restart_button = Button(
+    '''restart_button = Button(
         x=(WIDTH - button_width) // 2,
         y=HEIGHT - 100,  # Initial Y-coordinate; will adjust dynamically
         width=button_width,
@@ -210,7 +218,7 @@ def initialize_buttons():
         text="Back",
         text_color=BLACK,
         font=small_font
-    )
+        )'''
 
 
 # Function to draw text centered
@@ -269,23 +277,8 @@ def draw_game_over_screen():
 # Function to draw the initial start screen
 def draw_start_screen():
     screen.fill(WHITE)
-    draw_text_custom("Makey Makey Game", BLACK, WIDTH // 2, HEIGHT // 2 - 200, font)
-
-    #alignment variables for horizontal alignment
-    spacing = 10
-    button_width = start_button.rect.width + leaderboard_button.rect.width + rules_button.rect.width + 2 * spacing
-    start_x = (WIDTH - button_width) // 2
-
-    #horizontal placement
-    leaderboard_button.rect.x = start_x
-    start_button.rect.x = start_x + leaderboard_button.rect.width + spacing
-    rules_button.rect.x = start_button.rect.x + start_button.rect.width + spacing
-
-    #alignment for vertical centering
-    vertical_center = HEIGHT // 2
-    start_button.rect.y = vertical_center
-    leaderboard_button.rect.y = vertical_center
-    rules_button.rect.y = vertical_center
+    logo_rect = logo_img.get_rect(center=(WIDTH // 2, HEIGHT // 3))
+    screen.blit(logo_img, logo_rect)
 
     start_button.draw(screen)
     leaderboard_button.draw(screen)
@@ -294,6 +287,7 @@ def draw_start_screen():
 
 def draw_difficulty_screen():
     screen.fill(WHITE)
+
     easy_button.draw(screen)
     medium_button.draw(screen)
     hard_button.draw(screen)
