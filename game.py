@@ -40,8 +40,8 @@ DARK_GRAY = (105, 105, 105)
 LIGHT_GRAY = (211, 211, 211)
 
 # Fonts
-font = pygame.font.Font(None, 74)
-small_font = pygame.font.Font(None, 36)
+font = pygame.font.Font("GrinchedRegular.otf", 74)
+small_font = pygame.font.Font("GrinchedRegular.otf", 36)
 input_font = pygame.font.Font(None, 50)
 
 # Game variables
