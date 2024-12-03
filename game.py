@@ -366,7 +366,10 @@ def draw_rules_screen():
 # Function to handle name input
 def handle_name_input(event):
     global player_name, name_input_active, current_state
+    if event.type == pygame.KEYUP and (event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT):
+        current_state = LEADERBOARD_DISPLAY
     if event.type == pygame.KEYDOWN:
+
         if event.key == pygame.K_RETURN:
             if player_name.strip() != "":
                 update_leaderboard(player_name.strip())
