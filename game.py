@@ -658,7 +658,6 @@ while running:
                 bg_y = HEIGHT - long_bg_img.get_height()
 
         screen.blit(long_bg_img, (0, bg_y))
-        print(f"bg_y: {bg_y}")
 
         # Display the direction and timer if the round is active
         if round_active:
@@ -668,17 +667,11 @@ while running:
         # Display the score
         draw_text_custom(f"Score: {score}", BLACK, 70, 30, small_font)
 
+        # Display success or failure message
         if success_message_time > 0 and time.time() - success_message_time < 1:  # Show message for 1 second
             message = "Great Job!" if key_matched else "Try Again!"
             message_color = GREEN if key_matched else RED
             draw_text_custom(message, message_color, WIDTH // 2, HEIGHT // 2, small_font)
-
-        # Display success or failure message
-        '''if success_message_time > 0 and time.time() - success_message_time < 1:  # Show message for 1 second
-            if score >= 0:
-                message = "Great Job!" if score > 0 else "Try Again!"
-                message_color = GREEN if score > 0 else RED
-                draw_text_custom(message, message_color, WIDTH // 2, HEIGHT // 2, small_font)'''
 
         pygame.display.flip()
 
