@@ -56,7 +56,9 @@ LIGHT_GRAY = (211, 211, 211)
 font = pygame.font.Font("GrinchedRegular.otf", 74)
 small_font = pygame.font.Font("GrinchedRegular.otf", 36)
 input_font = pygame.font.Font(None, 50)
-rules_font = pygame.font.Font("coolvetica.otf", 36)
+rules_font = pygame.font.Font("coolvetica.otf", 24)
+leaderboard_font = pygame.font.Font("coolvetica.otf", 36)
+
 
 # Game variables
 score = 0
@@ -366,7 +368,7 @@ def draw_rules_screen():
         "How to Play:",
         "",
         "1. The game will display a direction (LEFT or RIGHT).",
-        "2. Do a pull up in the correct direction.",
+        "2. Do a pull up and tap your chin in the correct direction.",
         "3. You have 5 seconds to complete the pull up.",
         "4. Each correct response increases your score by 1.",
         "5. Incorrect responses decrease your score by 1.",
@@ -374,7 +376,7 @@ def draw_rules_screen():
         "Try to achieve the highest score possible!"
     ]
     for i, line in enumerate(rules_text):
-        draw_text_custom(line, BLACK, WIDTH // 2, 220 + i * 30, rules_font)
+        draw_text_custom(line, BLACK, WIDTH // 2, 220 + i * 40, rules_font)
     # Draw Back button
     back_button.draw(screen)
     pygame.display.flip()
