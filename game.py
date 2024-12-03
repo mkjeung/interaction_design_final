@@ -15,6 +15,7 @@ exp_sound = pygame.mixer.Sound("Minecraft XP Sound.mp3")
 clock_sound = pygame.mixer.Sound("Fast Ticking clock sound effect.mp3")
 fail_sound = pygame.mixer.Sound("Buzzer sound effect.wav")
 click_sound = pygame.mixer.Sound("Click - Sound Effect (HD).wav")
+get_ready_sound = pygame.mixer.Sound("Get Ready SOUND Effect.mp3")
 
 #Loading images
 logo_img = pygame.image.load("logo.png")
@@ -469,6 +470,7 @@ while running:
                 click_sound.play()
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     current_state = COUNTDOWN
+                    get_ready_sound.play()
                     countdown_start_ticks = pygame.time.get_ticks()  # Record the start time
                 elif event.key == pygame.K_DOWN:
                     if diff_selection == 'medium_button':
@@ -495,14 +497,17 @@ while running:
             if easy_button.is_clicked(event):
                 countdown_duration = 10
                 current_state = COUNTDOWN
+                get_ready_sound.play()
                 countdown_start_ticks = pygame.time.get_ticks()  # Record the start time
             elif medium_button.is_clicked(event):
                 countdown_duration = 5
                 current_state = COUNTDOWN
+                get_ready_sound.play()
                 countdown_start_ticks = pygame.time.get_ticks()  # Record the start time
             elif hard_button.is_clicked(event):
                 countdown_duration = 3
                 current_state = COUNTDOWN
+                get_ready_sound.play()
                 countdown_start_ticks = pygame.time.get_ticks()  # Record the start time
 
         elif current_state == PLAYING:
