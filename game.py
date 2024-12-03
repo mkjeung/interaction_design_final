@@ -41,6 +41,7 @@ long_bg_img = pygame.transform.scale(long_bg_img, (WIDTH, HEIGHT * 2))
 #variables to track moving bg
 bg_y = HEIGHT - long_bg_img.get_height()
 bg_speed = 1
+bg_speed_down = 4
 
 # Colors
 WHITE = (255, 255, 255)
@@ -316,14 +317,15 @@ def draw_start_screen():
     start_button.draw(screen)
     leaderboard_button.draw(screen)
     rules_button.draw(screen)
-    #draw_text_custom("To navigate between options, squeeze the left and right hand bars. To select, press either Chin sensor.", BLACK, )
+    prompt = ["To navigate between options, squeeze the left and right hand bars.","To select, press either Chin Sensor"]
+    for i,line in enumerate(prompt):
+        draw_text_custom(line, DARK_GRAY, WIDTH // 2, HEIGHT - 150 + 30*i, rules_font)
     pygame.display.flip()
 
 def draw_difficulty_screen():
     screen.blit(bg_img_2, (0, 0))
     title_rect = diff_img.get_rect(center=(WIDTH // 2, HEIGHT // 4))
     screen.blit(diff_img, title_rect)
-
     easy_button.draw(screen)
     medium_button.draw(screen)
     hard_button.draw(screen)
@@ -645,7 +647,7 @@ while running:
                 bg_y = 0
         else:
             if bg_y > HEIGHT - long_bg_img.get_height():
-                bg_y -= bg_speed
+                bg_y -= bg_speed_down
             else:
                 bg_y = HEIGHT - long_bg_img.get_height()
 
