@@ -10,7 +10,7 @@ pygame.init()
 # Screen dimensions
 WIDTH, HEIGHT = 1000, 800
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Makey Makey Game")
+pygame.display.set_caption("Up, Up & Away")
 exp_sound = pygame.mixer.Sound("Minecraft XP Sound.mp3")
 clock_sound = pygame.mixer.Sound("Fast Ticking clock sound effect.mp3")
 fail_sound = pygame.mixer.Sound("Buzzer sound effect.wav")
@@ -31,6 +31,9 @@ bg_img_2 = pygame.transform.scale(bg_img_2, (WIDTH, HEIGHT))
 
 countdown_img = pygame.image.load("countdown_bg.png")
 countdown_img = pygame.transform.scale(countdown_img, (WIDTH, HEIGHT))
+
+rules_img = pygame.image.load("rules_bg.png")
+rules_img = pygame.transform.scale(rules_img, (WIDTH, HEIGHT))
 
 long_bg_img = pygame.image.load("long_bg.png")
 long_bg_img = pygame.transform.scale(long_bg_img, (WIDTH, HEIGHT * 2))
@@ -53,6 +56,7 @@ LIGHT_GRAY = (211, 211, 211)
 font = pygame.font.Font("GrinchedRegular.otf", 74)
 small_font = pygame.font.Font("GrinchedRegular.otf", 36)
 input_font = pygame.font.Font(None, 50)
+rules_font = pygame.font.Font("coolvetica.otf", 36)
 
 # Game variables
 score = 0
@@ -328,7 +332,7 @@ def draw_leaderboard_screen():
     draw_text_custom("Leaderboard", BLACK, WIDTH // 2, HEIGHT // 2 - 200, font)
     for i, entry in enumerate(leaderboard):
         entry_text = f"{i + 1}. {entry['name']} - {entry['score']}"
-        draw_text_custom(entry_text, BLACK, WIDTH // 2, HEIGHT // 2 - 100 + i * 40, small_font)
+        draw_text_custom(entry_text, BLACK, WIDTH // 2, HEIGHT // 2 - 100 + i * 40, rules_font)
     # Draw restart button and home button
     restart_button.draw(screen)
     home_button.draw(screen)
@@ -354,11 +358,13 @@ def return_to_home():
 # Function to draw the rules screen
 def draw_rules_screen():
     screen.fill(WHITE)
+    screen.blit(rules_img, (0, 0))
     draw_text_custom("Game Rules", BLACK, WIDTH // 2, 100, font)
+    draw_text_custom("Welcome to Up, Up, & Away!", BLACK, WIDTH // 2, 180, small_font)
     rules_text = [
-        "Welcome to the Makey Makey Game!",
         "",
         "How to Play:",
+        "",
         "1. The game will display a direction (LEFT or RIGHT).",
         "2. Do a pull up in the correct direction.",
         "3. You have 5 seconds to complete the pull up.",
@@ -368,7 +374,7 @@ def draw_rules_screen():
         "Try to achieve the highest score possible!"
     ]
     for i, line in enumerate(rules_text):
-        draw_text_custom(line, BLACK, WIDTH // 2, 200 + i * 30, small_font)
+        draw_text_custom(line, BLACK, WIDTH // 2, 220 + i * 30, rules_font)
     # Draw Back button
     back_button.draw(screen)
     pygame.display.flip()
