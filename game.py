@@ -180,7 +180,7 @@ def initialize_buttons():
 
     easy_button = Button(
         x=start_x_diff,
-        y=menu_y,
+        y=menu_y + 10,
         unselected_img="buttons/easy_button.png",
         selected_img="buttons/easy_button_selected.png",
         width=DIFF_WIDTH,
@@ -189,7 +189,7 @@ def initialize_buttons():
 
     medium_button = Button(
         x=start_x_diff + DIFF_WIDTH + spacing*2,
-        y=menu_y,
+        y=menu_y + 10,
         unselected_img="buttons/medium_button.png",
         selected_img="buttons/medium_button_selected.png",
         width=DIFF_WIDTH,
@@ -198,7 +198,7 @@ def initialize_buttons():
 
     hard_button = Button(
         x= start_x_diff + (DIFF_WIDTH + spacing*2) * 2,
-        y=menu_y,
+        y=menu_y + 10,
         unselected_img="buttons/hard_button.png",
         selected_img="buttons/hard_button_selected.png",
         width=DIFF_WIDTH,
@@ -298,7 +298,6 @@ def draw_start_screen():
 
 def draw_difficulty_screen():
     screen.blit(bg_img_2, (0, 0))
-
     title_rect = diff_img.get_rect(center=(WIDTH // 2, HEIGHT // 4))
     screen.blit(diff_img, title_rect)
 
@@ -398,22 +397,21 @@ while running:
         # Handle events based on current state
         if current_state == START_SCREEN:
             if start_button.is_clicked(event):
-                # Transition to COUNTDOWN state
                 current_state = DIFFICULTY_SCREEN
             if leaderboard_button.is_clicked(event):
                 current_state = LEADERBOARD_DISPLAY
             if rules_button.is_clicked(event):
                 current_state = RULES_SCREEN
-        if current_state == DIFFICULTY_SCREEN:
+        elif current_state == DIFFICULTY_SCREEN:
             if easy_button.is_clicked(event):
                 countdown_duration = 10
                 current_state = COUNTDOWN
                 countdown_start_ticks = pygame.time.get_ticks()  # Record the start time
-            if medium_button.is_clicked(event):
+            elif medium_button.is_clicked(event):
                 countdown_duration = 5
                 current_state = COUNTDOWN
                 countdown_start_ticks = pygame.time.get_ticks()  # Record the start time
-            if hard_button.is_clicked(event):
+            elif hard_button.is_clicked(event):
                 countdown_duration = 3
                 current_state = COUNTDOWN
                 countdown_start_ticks = pygame.time.get_ticks()  # Record the start time
@@ -477,7 +475,7 @@ while running:
     if current_state == START_SCREEN:
         draw_start_screen()
 
-    if current_state == DIFFICULTY_SCREEN:
+    elif current_state == DIFFICULTY_SCREEN:
         draw_difficulty_screen()
 
     elif current_state == COUNTDOWN:
