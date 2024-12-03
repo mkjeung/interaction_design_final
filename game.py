@@ -59,10 +59,9 @@ game_over = False
 name_input_active = False
 player_name = ""
 difficulty = 'medium'
-global curr_selection
 curr_selection = 'start_button'
-global diff_selection 
 diff_selection = 'medium_button'
+leaderboard_selection = 'home_button'
 LEADERBOARD_FILE = 'leaderboard.json'
 
 # Define Game States
@@ -223,7 +222,8 @@ def initialize_buttons():
         unselected_img="buttons/home_button.png",
         selected_img="buttons/home_button_selected.png",
         width=BTN_WIDTH,
-        height=BTN_HEIGHT
+        height=BTN_HEIGHT,
+        selected_bool=True
     )
     
     back_button = Button(
@@ -232,7 +232,8 @@ def initialize_buttons():
         unselected_img="buttons/back_button.png",
         selected_img="buttons/back_button_selected.png",
         width=BTN_WIDTH,
-        height=BTN_HEIGHT
+        height=BTN_HEIGHT,
+        selected_bool = True
     )
 
 
@@ -402,8 +403,16 @@ while running:
 
         # Handle events based on current state
         if current_state == START_SCREEN:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
+            if event.type == pygame.KEYUP:
+                click_sound.play()
+                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                    if curr_selection == 'start_button':
+                        current_state = DIFFICULTY_SCREEN
+                    if curr_selection == 'leaderboard_button':
+                        current_state = LEADERBOARD_DISPLAY
+                    if curr_selection == 'rules_button':
+                        current_state = RULES_SCREEN
+                elif event.key == pygame.K_UP:
                     if curr_selection == 'start_button':
                         start_button.is_selected = False
                         rules_button.is_selected  = True
@@ -432,22 +441,30 @@ while running:
             if rules_button.is_clicked(event):
                 current_state = RULES_SCREEN
         elif current_state == DIFFICULTY_SCREEN:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_DOWN:
+            if event.type == pygame.KEYUP:
+                click_sound.play()
+                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                    current_state = COUNTDOWN
+                    countdown_start_ticks = pygame.time.get_ticks()  # Record the start time
+                elif event.key == pygame.K_DOWN:
                     if diff_selection == 'medium_button':
+                        countdown_duration = 10
                         medium_button.is_selected = False
                         easy_button.is_selected  = True
                         diff_selection = 'easy_button'
                     elif diff_selection == 'hard_button':
+                        coutndown_duration = 5
                         hard_button.is_selected = False
                         medium_button.is_selected = True
                         diff_selection = 'medium_button'
                 elif event.key == pygame.K_UP:
                     if diff_selection == 'medium_button':
+                        countdown_duration = 3
                         medium_button.is_selected = False
                         hard_button.is_selected = True
                         diff_selection = 'hard_button'
                     elif diff_selection == 'easy_button':
+                        countdown_duration = 5
                         easy_button.is_selected = False
                         medium_button.is_selected = True
                         diff_selection = 'medium_button'
@@ -506,12 +523,35 @@ while running:
             handle_name_input(event)
 
         elif current_state == LEADERBOARD_DISPLAY:
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                    if leaderboard_selection == 'home_button':
+                        current_state = START_SCREEN
+                    else:
+                        restart_button.is_selected = False
+                        home_button.is_selected = True
+                        leaderboard_selection = 'home_button'
+                        reset_game()
+                if event.key == pygame.K_DOWN and leaderboard_selection == 'home_button':
+                    home_button.is_selected = False
+                    restart_button.is_selected = True
+                    leaderboard_selection = 'restart_button'
+                elif event.key == pygame.K_UP and leaderboard_selection == 'restart_button':
+                    restart_button.is_selected = False
+                    home_button.is_selected = True
+                    leaderboard_selection = 'home_button'
             if restart_button.is_clicked(event):
+                restart_button.is_selected = False
+                home_button.is_selected = True
+                leaderboard_selection = 'home_button'
                 reset_game()
             elif home_button.is_clicked(event):
                 return_to_home()
 
         elif current_state == RULES_SCREEN:
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                    current_state = START_SCREEN
             if back_button.is_clicked(event):
                 current_state = START_SCREEN
 
