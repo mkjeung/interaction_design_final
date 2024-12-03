@@ -531,7 +531,10 @@ while running:
                         restart_button.is_selected = False
                         home_button.is_selected = True
                         leaderboard_selection = 'home_button'
-                        reset_game()
+                        leaderboard_button.is_selected = False
+                        start_button.is_selected = True
+                        curr_selection = 'start_button'
+                        current_state = DIFFICULTY_SCREEN
                 if event.key == pygame.K_DOWN and leaderboard_selection == 'home_button':
                     home_button.is_selected = False
                     restart_button.is_selected = True
@@ -543,8 +546,11 @@ while running:
             if restart_button.is_clicked(event):
                 restart_button.is_selected = False
                 home_button.is_selected = True
+                leaderboard_button.is_selected = False
+                start_button.is_selected = True
+                curr_selection = 'start_button'
                 leaderboard_selection = 'home_button'
-                reset_game()
+                current_state = DIFFICULTY_SCREEN
             elif home_button.is_clicked(event):
                 return_to_home()
 
