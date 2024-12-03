@@ -29,6 +29,9 @@ bg_img = pygame.transform.scale(bg_img, (WIDTH, HEIGHT))
 bg_img_2 = pygame.image.load("bg_2.png")
 bg_img_2 = pygame.transform.scale(bg_img_2, (WIDTH, HEIGHT))
 
+countdown_img = pygame.image.load("countdown_bg.png")
+countdown_img = pygame.transform.scale(countdown_img, (WIDTH, HEIGHT))
+
 long_bg_img = pygame.image.load("long_bg.png")
 long_bg_img = pygame.transform.scale(long_bg_img, (WIDTH, HEIGHT * 2))
 
@@ -588,6 +591,7 @@ while running:
 
         if seconds_left > 0:
             screen.fill(WHITE)
+            screen.blit(countdown_img, (0, 0))
             countdown_text = str(seconds_left)
             draw_text_custom(countdown_text, BLACK, WIDTH // 2, HEIGHT // 2, font)
             pygame.display.flip()
@@ -648,11 +652,11 @@ while running:
         draw_text_custom(f"Score: {score}", BLACK, 70, 30, small_font)
 
         # Display success or failure message
-        if success_message_time > 0 and time.time() - success_message_time < 2:  # Show message for 2 seconds
+        if success_message_time > 0 and time.time() - success_message_time < 1:  # Show message for 1 second
             if score >= 0:
                 message = "Great Job!" if score > 0 else "Try Again!"
                 message_color = GREEN if score > 0 else RED
-                draw_text_custom(message, message_color, WIDTH // 2, HEIGHT // 2 + 100, small_font)
+                draw_text_custom(message, message_color, WIDTH // 2, HEIGHT // 2, small_font)
 
         pygame.display.flip()
 
