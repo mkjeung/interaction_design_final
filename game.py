@@ -316,6 +316,7 @@ def draw_start_screen():
     start_button.draw(screen)
     leaderboard_button.draw(screen)
     rules_button.draw(screen)
+    #draw_text_custom("To navigate between options, squeeze the left and right hand bars. To select, press either Chin sensor.", BLACK, )
     pygame.display.flip()
 
 def draw_difficulty_screen():
