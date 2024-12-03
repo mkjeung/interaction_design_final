@@ -29,6 +29,13 @@ bg_img = pygame.transform.scale(bg_img, (WIDTH, HEIGHT))
 bg_img_2 = pygame.image.load("bg_2.png")
 bg_img_2 = pygame.transform.scale(bg_img_2, (WIDTH, HEIGHT))
 
+long_bg_img = pygame.image.load("long_bg.png")
+long_bg_img = pygame.transform.scale(long_bg_img, (WIDTH, HEIGHT * 2))
+
+#variables to track moving bg
+bg_y = HEIGHT - long_bg_img.get_height()
+bg_speed = 1
+
 # Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -611,12 +618,23 @@ while running:
         elapsed_time = time.time() - start_time
         remaining_time = max(0, countdown_duration - int(elapsed_time))  # Countdown from 5 seconds
 
-        if round_active and remaining_time == 0:  # Timeout ends the game
+        if round_active and remaining_time == 0:
             clock_sound.stop()
             fail_sound.play()
             game_active = False
             game_over = True
             current_state = GAME_OVER
+
+        if round_active:
+            if bg_y < 0:
+                bg_y += bg_speed
+            else:
+                bg_y = 0
+        else:
+            bg_y = HEIGHT - long_bg_img.get_height()
+
+        screen.blit(long_bg_img, (0, bg_y))
+        print(f"bg_y: {bg_y}")
 
         # Display the direction and timer if the round is active
         if round_active:
