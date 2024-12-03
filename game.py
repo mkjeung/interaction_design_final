@@ -631,7 +631,10 @@ while running:
             else:
                 bg_y = 0
         else:
-            bg_y = HEIGHT - long_bg_img.get_height()
+            if bg_y > HEIGHT - long_bg_img.get_height():
+                bg_y -= bg_speed
+            else:
+                bg_y = HEIGHT - long_bg_img.get_height()
 
         screen.blit(long_bg_img, (0, bg_y))
         print(f"bg_y: {bg_y}")
