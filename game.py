@@ -30,6 +30,9 @@ bg_img = pygame.transform.scale(bg_img, (WIDTH, HEIGHT))
 bg_img_2 = pygame.image.load("bg_2.png")
 bg_img_2 = pygame.transform.scale(bg_img_2, (WIDTH, HEIGHT))
 
+leaderboard_img = pygame.image.load("leaderboard_bg.png")
+leaderboard_img = pygame.transform.scale(leaderboard_img, (WIDTH, HEIGHT))
+
 countdown_img = pygame.image.load("countdown_bg.png")
 countdown_img = pygame.transform.scale(countdown_img, (WIDTH, HEIGHT))
 
@@ -336,7 +339,8 @@ def draw_difficulty_screen():
 # Function to draw the leaderboard on game-over screen or Leaderboard Screen
 def draw_leaderboard_screen():
     screen.fill(WHITE)
-    draw_text_custom("Leaderboard", BLACK, WIDTH // 2, HEIGHT // 2 - 200, font)
+    screen.blit(leaderboard_img, (0, 0))
+    draw_text_custom("Leaderboard", WHITE, WIDTH // 2, HEIGHT // 2 - 200, font)
     for i, entry in enumerate(leaderboard):
         entry_text = f"{i + 1}. {entry['name']} - {entry['score']}"
         draw_text_custom(entry_text, BLACK, WIDTH // 2, HEIGHT // 2 - 100 + i * 40, rules_font)
